@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pick a Category</title>
+</head>
+<body>
+<header> 
+    <h1>Please Choose a Category to get Started </h1> 
+</header>
+<main> 
+    <div id="animals">
+        <h3> Animals </h3>
+        <form method="GET" action='/animals_easy'>
+        <input type="submit" name="submit" value="Answer Animal Questions"> 
+        </form> 
+    </div> 
+
+    <div id="sports"> 
+        <h3> Sports </h3>
+        <form method="GET" action='/sports_easy'>
+            <input type=submit name="submit" value="Answer Sports Questions"> 
+            </form> 
+    </div>
+    <div id="books">
+        <h3> Entertainment: Books  </h3>
+        <form method="GET" action='/books_easy'>
+            <input type=submit name="submit" value="Answer Book Questions"> 
+            </form> 
+    </div> 
+
+    <div id="general"> 
+        <h3> General Knowledge </h3>
+        <form method="GET" action='/general_easy'>
+            <input type=submit name="submit" value="Answer General Questions"> 
+            </form> 
+    </div>
+
+</main>
+
+    
+</body>
+</html>

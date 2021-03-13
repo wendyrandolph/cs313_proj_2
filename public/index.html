@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Home - Trivia Game</title>
+    <style>
+        html {
+            margin-top: 50px;
+            background-color: white;
+        }
+
+        body {
+            max-width: 300px;
+            margin: 0 auto;
+            background: #aaa;
+            height: auto;
+            padding-bottom: 20px;
+            border: 5px double black;
+        }
+
+        h1 {
+            text-transform: uppercase;
+            padding: 10px 35px;
+            font-size: 25px;
+            margin-block-start: 0;
+            color: whitesmoke;
+
+        }
+
+        h3,
+        h4,
+        p {
+            margin: 20px auto;
+            text-align: center;
+        }
+
+        p {
+            color: purple;
+        }
+
+        label {
+            color: purple;
+            margin-top: 200px;
+        }
+
+        label,
+        input#fname {
+            margin: 12px;
+
+        }
+
+        input {
+            margin-left: 12px;
+        }
+
+        header {
+            border-bottom: 5px double white;
+            height: 70px;
+            background: teal;
+            text-align: center;
+        }
+        form{ 
+            margin-top: 20px; 
+        }
+    </style>
+
+</head>
+
+<body>
+    <header>
+        <h1> Who wants to play? </h1>
+    </header>
+
+    <form action='/getAPI' method="GET">
+        <label for="fname"> Please enter your name:</label>
+        <input type="text" name="fname" id="fname">
+        <input type="submit" value="Let's Play">
+    </form>
+
+
+</body>
+
+</html>
