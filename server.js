@@ -76,6 +76,9 @@ app.get('/scores', function (req, res, next) {
   res.render('pages/highscore.ejs')
 })
 
+app.get('/playAgain', function(req, res, next){ 
+  res.render('pages/game.ejs')
+})
 
 //Animal Easy questions 
 app.get('/animals_easy', function (req, res, next) {
@@ -86,7 +89,7 @@ app.get('/animals_easy', function (req, res, next) {
     'https://opentdb.com/api.php?amount=100&category=27&difficulty=easy&type=multiple'
   )
     .then((res) => {
-      return JSON.parse();
+      return express.json();
     })
     .then((loadedQuestions) => {
       questions = loadedQuestions.results.map((loadedQuestion) => {
