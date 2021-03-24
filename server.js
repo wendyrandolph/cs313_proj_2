@@ -10,7 +10,7 @@ const request = require("request")
 const ejs = require('ejs');
 const fs = require('fs');
 const axios = require('axios')
-const env = require('dotenv'); 
+const env = require('dotenv');
 
 
 const { Pool } = require("pg");
@@ -38,12 +38,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => {
-  res.render('index')
+  res.render('pages/category.ejs')
 });
 
 app.get('/getAPI', function (req, res, next) {
-
-
   res.render('pages/display.ejs')
 })
   .on("error", err => {
@@ -63,7 +61,17 @@ app.get('/scores', function (req, res, next) {
   res.render('pages/highscore.ejs')
 })
 
-app.post('/login', function (req, res, next) {
+app.post('/login', async (req, res) => {
+  try {
+    const {username} = req.body; 
+    const newUsername = await pool.query(
+      "INSERT INTO username (username) VALUES ($1) RETURNING *", [username]
+    )
+
+  } catch (err) {
+    console.error(err.message)
+  }
+
   var username = req.body.username
   console.log(username + "This is the username entered");
   getUserName(username)
@@ -156,6 +164,6 @@ function getUserFromDb(username, callback) {
     }
     console.log("Found DB result:" + JSON.stringify(result));
     callback(null, result);
- 
-  }) 
+
+  })
 }
