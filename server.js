@@ -10,6 +10,7 @@ const request = require("request")
 const ejs = require('ejs');
 const fs = require('fs');
 const axios = require('axios')
+const env = require('dotenv'); 
 
 const { Pool } = require("pg");
 const connectionString = process.env.DATABASE_URL || "postgres://postgres:Honey001@localhost:5432/project_2";
