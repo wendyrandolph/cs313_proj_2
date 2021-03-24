@@ -1,84 +1,55 @@
+  
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-
-  <title>Trivia Question</title>
-  <style>
-    html {
-      margin-top: 50px;
-      background-color: white;
-    }
-
-    body {
-      max-width: 300px;
-      margin: 0 auto;
-      background: #aaa;
-      height: auto;
-      padding-bottom: 20px;
-      border: 5px double black;
-    }
-
-    h1 {
-      text-transform: uppercase;
-      padding: 10px 35px;
-      font-size: 25px;
-      margin-block-start: 0;
-      color: whitesmoke; 
-
-    }
-    h3, h4, p{ 
-      margin: 20px auto; 
-      text-align: center;
-    }
-    p{ 
-      color: purple; 
-    }
-
-    input label,
-    input#fname  {
-      margin: 12px;
-    }
-input{ 
-  margin-left: 12px; 
-}
-    header {
-      border-bottom: 5px double white;
-      height: 50px;
-      background: teal; 
-      text-align: center;
-    }
-
-  </style>
-</head>
-
-<body>
-  <header>
-    <h1> Trivia Question </h1>
-  </header>
-  <div id="question">
-    <form method="GET" action='/getAPI'>
-      <h3>WELCOME <br> <%= myData.fname %> </h3>
-      <h4> Category: <%= myData.category %><br> </h4>
-      <p> <%= myData.question %></p><br><br>
-
-
-      <input type="checkbox" name=answers[] value="a"> <%= myData.answer %><br><br>
-      <input type="checkbox" name=answers[] value="b"><%= myData.random_sort[0] %><br><br>
-      <input type="checkbox" name=answers[] value="c"><%= myData.random_sort[1] %> <br><br>
-      <input type="checkbox" name=answers[] value="d"><%= myData.random_sort[2] %><br><br>
-
-      <input id="submit" type="submit" name="submit">
-    </form>
-
-  </div>
-
-
-
-  <div id="answer">
-
-  </div>
-
-</body>
-
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Quick Quiz - Play</title>
+    <link rel="stylesheet" href="/stylesheets/main.css" />
+    <link rel="stylesheet" href="/stylesheets/game.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div id="game" class="justify-center flex-column">
+        <div id="hud">
+          <div id="hud-item">
+            <p id="progressText" class="hud-prefix">
+              Question
+            </p>
+            <div id="progressBar">
+              <div id="progressBarFull"></div>
+            </div>
+          </div>
+          <div id="hud-item">
+            <p class="hud-prefix">
+              Score
+            </p>
+            <h1 class="hud-main-text" id="score">
+              0
+            </h1>
+          </div>
+        </div>
+        <h2 id="question">What is the answer to this questions?</h2>
+        <div class="choice-container">
+          <p class="choice-prefix">A</p>
+          <p class="choice-text" data-number="1">Choice 1</p>
+        </div>
+        <div class="choice-container">
+          <p class="choice-prefix">B</p>
+          <p class="choice-text" data-number="2">Choice 2</p>
+        </div>
+        <div class="choice-container">
+          <p class="choice-prefix">C</p>
+          <p class="choice-text" data-number="3">Choice 3</p>
+        </div>
+        <div class="choice-container">
+          <p class="choice-prefix">D</p>
+          <p class="choice-text" data-number="4">Choice 4</p>
+        </div>
+      </div>
+    </div>
+    <script src="/js/game.js"></script>
+    
+  </body>
 </html>

@@ -1,139 +1,157 @@
+
 const express = require('express');
-//const session = require('express-session');
+const session = require('express-session');
 const path = require('path');
 const PORT = process.env.PORT || 5000;
 const https = require("https");
 const router = require("router");
 const bodyParser = require("body-parser");
 const request = require("request")
+const ejs = require('ejs');
 const fs = require('fs');
-const { type, userInfo } = require('os');
-const { randomBytes } = require('crypto');
-//const { Pool } = require("pg");
+const axios = require('axios')
 
+const { Pool } = require("pg");
+const connectionString = process.env.DATABASE_URL || "postgres://postgres:Honey001@localhost:5432/project_2";
+const pool = new Pool({
+  connectionString: connectionString
+});
+
+
+
+
+var fname;
 const app = express();
 app.use(express.static(path.join(__dirname, 'public')))
-//app.use(session({ secret: 'ssshhhhh' }));
+app.use(session({
+  secret: 'secret-key',
+  resave: true,
+  saveUninitialized: true
+}));
+
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'ejs')
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
-
 app.get('/', (req, res) => {
   res.render('index')
 });
-// app.get('/category', function(req, next){ 
-//   var fname = req.query.fname
-//   res.render('pages/category', fname)
-// })
 
-//Retrieve the data from the web
 app.get('/getAPI', function (req, res, next) {
 
-  var fname = req.query.fname
-   
-  
-  https.get('https://opentdb.com/api.php?amount=1&difficulty=easy&type=multiple', resp => {
 
-    let data = ' ';
+  res.render('pages/display.ejs')
+})
+  .on("error", err => {
+    console.log("Something went wrong with displaying the API");
+    console.log("Error: " + err.message);
+  });
 
-    // //A chunk of data has been recieved 
-    resp.on("data", chunk => {
-      console.log("gather the data string")
-      data += chunk;
-      //console.log(typeof data);
-    });
-
-
-
-    //The whole response has been received. Print out the results; 
-    resp.on("end", () => {
-      console.log("The string is now complete, and ready to be put in an object.")
-     
-      var result = JSON.parse(data)
-   
-      let myData = {
-        fname: fname, 
-        difficulty: result.results[0].difficulty, 
-        question: result.results[0].question,
-        category: result.results[0].category,
-        answer: result.results[0].correct_answer,
-        random_sort: result.results[0].incorrect_answers
-        
-      }
-      // end of the myData object variable 
-
-
-      //Don't move this line of code. 
-      console.log(myData);
-      res.render('pages/display', { myData })
-
-    })// "end" of response 
-
-
-
-      .on("error", err => {
-        console.log("Something went wrong with displaying the API");
-        console.log("Error: " + err.message);
-      })
-  })
+app.get('/getCategory', function (req, res, next) {
+  res.render('pages/category.ejs')
 })
 
+app.get('/end', function (req, res, next) {
+  res.render('pages/end.ejs')
+})
 
-// //Animal Easy questions 
-// app.get('/animals_easy', function (req, res, next) {
-//   var fname = req.query.fname
+app.get('/scores', function (req, res, next) {
+  res.render('pages/highscore.ejs')
+})
 
-//   https.get('https://opentdb.com/api.php?amount=1&category=27&difficulty=easy&type=multiple', resp => {
-
-//     let data = ' ';
-
-//     // //A chunk of data has been recieved 
-//     resp.on("data", chunk => {
-//       console.log("gather the data string")
-//       data += chunk;
-//       //console.log(typeof data);
-//     });
-//   //The whole response has been received. Print out the results; 
-//     resp.on("end", () => {
-//       console.log("The string is now complete, and ready to be put in an object.")
-     
-//       var result = JSON.parse(data)
-   
-//       let myData = {
-//         fname: fname, 
-//         question: result.results[0].question,
-//         category: result.results[0].category,
-//         answer: result.results[0].correct_answer,
-//         random_sort: result.results[0].incorrect_answers
-        
-//       }
-//       // end of the myData object variable 
+app.post('/login', function (req, res, next) {
+  var username = req.body.username
+  console.log(username + "This is the username entered");
+  getUserName(username)
 
 
-//       //Don't move this line of code. 
-//       console.log(myData);
-//       res.render('pages/display', { myData })
+  res.render('pages/game.ejs', params)
 
-//     })// "end" of response 
+})
+//Animal Easy questions 
+app.get('/animals_easy', function (req, res, next) {
+  sess = req.session
+  var fname = req.query.fname
+
+  axios.get(
+    'https://opentdb.com/api.php?amount=100&category=27&difficulty=easy&type=multiple'
+  )
+    .then((res) => {
+      return JSON.parse();
+    })
+    .then((loadedQuestions) => {
+      questions = loadedQuestions.results.map((loadedQuestion) => {
+        const formattedQuestion = {
+          question: loadedQuestion.question,
+        };
+
+        const answerChoices = [...loadedQuestion.incorrect_answers];
+        formattedQuestion.answer = Math.floor(Math.random() * 4) + 1;
+        answerChoices.splice(
+          formattedQuestion.answer - 1,
+          0,
+          loadedQuestion.correct_answer
+        );
+
+        answerChoices.forEach((choice, index) => {
+          formattedQuestion['choice' + (index + 1)] = choice;
+        });
+
+        return formattedQuestion;
+      });
+      startGame();
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+  res.render('pages/display.ejs')
+})
+
+  .on("error", err => {
+    console.log("Something went wrong with displaying the API");
+    console.log("Error: " + err.message);
+  });
 
 
+//     })
 
-//       .on("error", err => {
-//         console.log("Something went wrong with displaying the API");
-//         console.log("Error: " + err.message);
-//       })
 //   })
-  
 
-//   res.render('pages/display', {myData})
 // })
 
 
 app.listen(PORT, () => console.log(`Listening on ${PORT}`));
 
-// function func(a, b){ 
-//   return 0.5 - Math.random(); 
-// }
+function checkAnswer() {
+  console.log("You are in the checkAnswer function")
+
+}
+
+function getUserName(username, req, res) {
+  console.log("Getting username info.");
+  console.log("retrieving person with id: ", username);
+  getUserFromDb(username, function (error, result) {
+    console.log("Back from the database with result: ", result);
+  });
+  var result = {username: username};
+  res.json(result);
+}
+
+
+function getUserFromDb(username, callback) {
+  console.log("getPersonFromDb called with id:", username);
+
+  var sql = "SELECT username FROM username WHERE username = $1::int";
+  var params = [username];
+  pool.query(sql, params, function (err, result) {
+    if (err) {
+      console.log("An error with the database occurred");
+      console.log(err);
+      callback(err, null);
+    }
+    console.log("Found DB result:" + JSON.stringify(result.rows));
+    callback(null, result.rows);
+ 
+  }) 
+}
