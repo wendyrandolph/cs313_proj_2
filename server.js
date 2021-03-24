@@ -38,7 +38,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => {
-  res.render('pages/category.ejs')
+  res.render('pages/game.ejs')
 });
 
 app.get('/getAPI', function (req, res, next) {
