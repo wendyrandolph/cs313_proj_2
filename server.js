@@ -76,25 +76,7 @@ app.get('/scores', function (req, res, next) {
   res.render('pages/highscore.ejs')
 })
 
-app.post('/login', async (req, res) => {
-  try {
-    const {username} = req.body; 
-    const newUsername = await pool.query(
-      "INSERT INTO username (username) VALUES ($1) RETURNING *", [username]
-    )
 
-  } catch (err) {
-    console.error(err.message)
-  }
-
-  var username = req.body.username
-  console.log(username + "This is the username entered");
-  getUserName(username)
-
-
-  res.render('pages/game.ejs', params)
-
-})
 //Animal Easy questions 
 app.get('/animals_easy', function (req, res, next) {
   sess = req.session
