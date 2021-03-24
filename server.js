@@ -38,8 +38,19 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => {
-  res.render('pages/game.ejs')
+  res.render('index')
 });
+
+
+//Post the username somewhere... 
+app.post('/createUser', function(req, res, next){ 
+var username = req.body.username 
+req.session.username = username
+var params = {username: username}
+console.log(req.session.username) 
+res.render('pages/game.ejs', params ); 
+})
+
 
 app.get('/getAPI', function (req, res, next) {
   res.render('pages/display.ejs')
@@ -54,7 +65,11 @@ app.get('/getCategory', function (req, res, next) {
 })
 
 app.get('/end', function (req, res, next) {
-  res.render('pages/end.ejs')
+  username = req.session.username; 
+
+  var params = { username: username}
+  console.log(params); 
+  res.render('pages/end.ejs', params)
 })
 
 app.get('/scores', function (req, res, next) {

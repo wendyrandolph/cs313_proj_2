@@ -12,26 +12,28 @@
   <body>
     <div class="container">
       <div id="end" class="flex-center flex-column">
-        <h1 id="finalScore"></h1>
+       <h2><%= username %> <br> You scored: </h2>  
+        <h1 id="finalScore"></h1><h2>points</h2> 
         <form>
+          
           <input
             type="text"
             name="username"
             id="username"
-            placeholder="username"
+            value="<%= username %>"
           />
           <button
             type="submit"
             class="btn"
             id="saveScoreBtn"
             onclick="saveHighScore(event)"
-            disabled
+            
           >
             Save
           </button>
         </form>
         <a class="btn" href="/animals_easy">Play Again</a>
-        <a class="btn" href="/">Go Home</a>
+        <a class="btn" href="/getAPI">Go Home</a>
       </div>
     </div>
     <script src="/js/end.js"></script>
