@@ -12,6 +12,7 @@ const fs = require('fs');
 const axios = require('axios')
 const env = require('dotenv'); 
 
+
 const { Pool } = require("pg");
 const connectionString = process.env.DATABASE_URL || "postgres://postgres:Honey001@localhost:5432/project_2";
 const pool = new Pool({
@@ -32,6 +33,7 @@ app.use(session({
 
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'ejs')
+app.use(express.json()) // => req.body
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -130,12 +132,13 @@ function checkAnswer() {
 }
 
 function getUserName(username, req, res) {
+
   console.log("Getting username info.");
   console.log("retrieving person with id: ", username);
   getUserFromDb(username, function (error, result) {
     console.log("Back from the database with result: ", result);
   });
-  var result = {username: username};
+  var result = {};
   res.json(result);
 }
 
@@ -143,7 +146,7 @@ function getUserName(username, req, res) {
 function getUserFromDb(username, callback) {
   console.log("getPersonFromDb called with id:", username);
 
-  var sql = "SELECT username FROM username WHERE username = $1::int";
+  var sql = "SELECT username FROM username WHERE username_id = $1::int";
   var params = [username];
   pool.query(sql, params, function (err, result) {
     if (err) {
@@ -151,8 +154,8 @@ function getUserFromDb(username, callback) {
       console.log(err);
       callback(err, null);
     }
-    console.log("Found DB result:" + JSON.stringify(result.rows));
-    callback(null, result.rows);
+    console.log("Found DB result:" + JSON.stringify(result));
+    callback(null, result);
  
   }) 
 }
