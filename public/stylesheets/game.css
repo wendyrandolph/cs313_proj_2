@@ -16,8 +16,8 @@
   
   .choice-prefix {
     padding: 1.5rem 2.5rem;
-    background-color: #FFD1BA; 
-    color: #493657; 
+    background-color: #493657; 
+    color: #FFD1BA; 
   }
   
   .choice-text {
@@ -26,11 +26,11 @@
   }
   
   .correct {
-    background-color: #46AF49; 
+    background-color:#019875;  
   }
   
   .incorrect {
-    background-color: #943866
+    background-color:#A10505; 
   }
   
   /* HUD */
