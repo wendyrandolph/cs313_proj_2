@@ -12,17 +12,15 @@ const fs = require('fs');
 const axios = require('axios')
 const env = require('dotenv');
 
+////Place to allow for a database connection if needed 
+// const { Pool } = require("pg");
+// const connectionString = process.env.DATABASE_URL || "postgres://postgres:Honey001@localhost:5432/project_2";
+// const pool = new Pool({
+//   connectionString: connectionString
+// });
+// process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0" // Avoids DEPTH_ZERO_SELF_SIGNED_CERT error for self-signed certs
 
-const { Pool } = require("pg");
-const connectionString = process.env.DATABASE_URL || "postgres://postgres:Honey001@localhost:5432/project_2";
-const pool = new Pool({
-  connectionString: connectionString
-});
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0" // Avoids DEPTH_ZERO_SELF_SIGNED_CERT error for self-signed certs
 
-
-
-var fname;
 const app = express();
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(session({
@@ -33,92 +31,71 @@ app.use(session({
 
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'ejs')
-app.use(express.json()) // => req.body
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
 
+//middleware helpers 
+app.use(express.json()) // => req.body
+app.use(express.urlencoded({ extended: false }));
+
+
+//Routes 
 app.get('/', (req, res) => {
   res.render('index')
 });
 
 
 //Post the username somewhere... 
-app.post('/createUser', function(req, res, next){ 
-var username = req.body.username 
-req.session.username = username
-var params = {username: username}
-console.log(req.session.username) 
-res.render('pages/game.ejs', params ); 
+app.post('/createUser', function (req, res, next) {
+  var username = req.body.username
+  req.session.username = username
+
+  var params = { username: username }
+  //console.log(req.session.username)
+  res.render('pages/game.ejs', params);
 })
 
-
 app.get('/getAPI', function (req, res, next) {
-  res.render('pages/display.ejs')
+  username = req.session.username;
+
+  var params = { username: username }
+ //console.log("This is the getAPI endpoint and the session username is" + username)
+
+  var params = { username: username }
+  res.render('pages/display.ejs', params)
 })
   .on("error", err => {
     console.log("Something went wrong with displaying the API");
     console.log("Error: " + err.message);
   });
 
+
 app.get('/getCategory', function (req, res, next) {
   res.render('pages/category.ejs')
 })
 
 app.get('/end', function (req, res, next) {
-  username = req.session.username; 
+  username = req.session.username;
 
-  var params = { username: username}
-  console.log(params); 
+  var params = { username: username }
+  //console.log(params);
   res.render('pages/end.ejs', params)
 })
 
 app.get('/scores', function (req, res, next) {
-  res.render('pages/highscore.ejs')
+  username = req.session.username;
+
+  
+  var params = { username: username }
+  res.render('pages/highscore.ejs', params)
 })
 
-app.get('/playAgain', function(req, res, next){ 
+app.get('/playAgain', function (req, res, next) {
   res.render('pages/game.ejs')
 })
 
 //Animal Easy questions 
 app.get('/animals_easy', function (req, res, next) {
-  sess = req.session
-  var fname = req.query.fname
 
-  axios.get(
-    'https://opentdb.com/api.php?amount=100&category=27&difficulty=easy&type=multiple'
-  )
-    .then((res) => {
-      return express.json();
-    })
-    .then((loadedQuestions) => {
-      questions = loadedQuestions.results.map((loadedQuestion) => {
-        const formattedQuestion = {
-          question: loadedQuestion.question,
-        };
-
-        const answerChoices = [...loadedQuestion.incorrect_answers];
-        formattedQuestion.answer = Math.floor(Math.random() * 4) + 1;
-        answerChoices.splice(
-          formattedQuestion.answer - 1,
-          0,
-          loadedQuestion.correct_answer
-        );
-
-        answerChoices.forEach((choice, index) => {
-          formattedQuestion['choice' + (index + 1)] = choice;
-        });
-
-        return formattedQuestion;
-      });
-      startGame();
-    })
-    .catch((err) => {
-      console.error(err);
-    });
-  res.render('pages/display.ejs')
 })
-
   .on("error", err => {
     console.log("Something went wrong with displaying the API");
     console.log("Error: " + err.message);
@@ -133,37 +110,3 @@ app.get('/animals_easy', function (req, res, next) {
 
 
 app.listen(PORT, () => console.log(`Listening on ${PORT}`));
-
-function checkAnswer() {
-  console.log("You are in the checkAnswer function")
-
-}
-
-function getUserName(username, req, res) {
-
-  console.log("Getting username info.");
-  console.log("retrieving person with id: ", username);
-  getUserFromDb(username, function (error, result) {
-    console.log("Back from the database with result: ", result);
-  });
-  var result = {};
-  res.json(result);
-}
-
-
-function getUserFromDb(username, callback) {
-  console.log("getPersonFromDb called with id:", username);
-
-  var sql = "SELECT username FROM username WHERE username_id = $1::int";
-  var params = [username];
-  pool.query(sql, params, function (err, result) {
-    if (err) {
-      console.log("An error with the database occurred");
-      console.log(err);
-      callback(err, null);
-    }
-    console.log("Found DB result:" + JSON.stringify(result));
-    callback(null, result);
-
-  })
-}

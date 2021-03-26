@@ -61,3 +61,11 @@
     background-color: #493657; 
     width: 0%;
   }
+  label { 
+    font-size: 2rem; 
+  }
+
+  input{ 
+    font-size: 2rem;
+    
+  }

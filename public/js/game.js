@@ -1,4 +1,3 @@
- 
 const question = document.getElementById('question');
 const choices = Array.from(document.getElementsByClassName('choice-text'));
 const progressText = document.getElementById('progressText');
@@ -12,15 +11,15 @@ let availableQuesions = [];
 
 let questions = [];
 
- 
 fetch(
-    'https://opentdb.com/api.php?amount=100&category=9&difficulty=easy&type=multiple'
+   ' https://opentdb.com/api.php?amount=10&category=9&difficulty=easy&type=multiple'
   )
 
     .then((res) => {
-       
-        return res.json();
-        var data = json
+        
+       var data = JSON.stringify(res).replace(/[\']/g, "&apos;", "$quot;", "&rsquo;", "&#039;", "&rsquo;")
+       return res.json(data);   
+      
     })
     .then((loadedQuestions) => {
         questions = loadedQuestions.results.map((loadedQuestion) => {
@@ -38,8 +37,9 @@ fetch(
   
             answerChoices.forEach((choice, index) => {
                 formattedQuestion['choice' + (index + 1)] = choice;
+               
             });
-  
+           
             return formattedQuestion;
         });
         startGame();
@@ -48,10 +48,10 @@ fetch(
         console.error(err);
     });
 
- 
+
 //constants 
 const CORRECT_BONUS = 10;
-const MAX_QUESTIONS = 3;
+const MAX_QUESTIONS = 10;
 
 startGame = () => {
     questionCounter = 0;
